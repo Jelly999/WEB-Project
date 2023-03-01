@@ -1,5 +1,12 @@
-block content
-
+doctype html
+html(lang='en')
+page.title
+head
+    block head
+      title= 'Code snippets'
+body 
+block body
+    
     if view == 'Private'
         h1= view
         p Welcome #{email}
@@ -9,15 +16,15 @@ block content
             label(for="items") Add-item 
             input(type="text" name="items" id="add-item")
             input(class="btn", value="Add-item", type="submit")
-        table
-            tr 
-                th User 
-                th Items
-            tr 
-                td= user
-                td= items
+
 
     else 
-        h1= view
-        a(class='button' href='/login.html') Login 
+        a(class='button' href='/login.html') Login   
         a(class='button', href='/register.html') Register
+        div 
+        h1= view
+        
+    
+    ul
+        each val in allTodos
+            li= val
