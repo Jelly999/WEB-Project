@@ -1,12 +1,10 @@
 block content
-    
+
     if view == 'Private'
         h1= view
         p Welcome #{email}
         form(action="/logout" method="GET")
             button(class="btn" type="submit" name="logout" id="logout") Logout
-        form(action="read()")
-            button(class="btn" type="submit" name="logout" id="logout") Storage
         form(action="/add-item" method="POST")
             label(for="items") Add-item 
             input(type="text" name="items" id="add-item")
