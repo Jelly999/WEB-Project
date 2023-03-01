@@ -12,7 +12,6 @@ const validateToken = require("./validateToken")
 require('dotenv').config();
 const { body, validationResult } = require('express-validator');
 const path = require('path');
-const { send } = require('process');
 const localStorage = require('localStorage');
 const jwtDecode = require('jwt-decode');
 
@@ -34,6 +33,7 @@ app.get("/login.html", (req, res) => {
 });
 
 app.get("/logout", (req, res) => {
+  //INFO
   localStorage.removeItem('auth_token')
   res.redirect('/');
 });
@@ -41,31 +41,21 @@ app.get("/logout", (req, res) => {
 app.get("/", (req, res) => {
   Todo.find({}, '-_id -__v' , (err, allTodos) => {
     let formatTodo = []
-    //console.log("###################", allTodos[2])
+    // LOOP INFO
     allTodos.forEach(i =>{
       i.items.forEach(j => {
         formatTodo.push(i.user+" : "+j)
-      
       });
     })
-    //console.log("This is a formated version: ",formatTodo)
-  
-  //console.log("Todo query from db: ",todos)
-  //console.log("homepage, token from localstorage: ",localStorage.getItem("auth_token"))
-  if(localStorage.getItem('auth_token') === null){
-    res.render('home', {view: 'Public', allTodos: formatTodo})
-  }else{
-    const dToken = jwtDecode(localStorage.getItem('auth_token'))
-    User.findOne({email: dToken.email}, function (err, user) {
-      if (err) throw err;
-    Todo.findOne({user: user._id}, (err, todos) =>{
-      let items;
-      if (todos === null){items = []}else{items = todos.items}
-      //console.log("homepage, todo items:",items)
-      if(err) return next(err);
     
-    res.render ('home', {view: 'Private', email: dToken.email, allTodos: formatTodo })})})
-  }
+    //console.log("homepage, token from localstorage: ",localStorage.getItem("auth_token"))
+    // VIEW INFO
+    if(localStorage.getItem('auth_token') === null){
+      res.render('home', {view: 'Public', allTodos: formatTodo})
+    }else{
+      const dToken = jwtDecode(localStorage.getItem('auth_token'))
+      res.render ('home', {view: 'Private', email: dToken.email, allTodos: formatTodo })
+    }
   })
 });
 
@@ -132,9 +122,6 @@ app.post('/register',
                 }).save((err) => {
                     if(err) return next(err);
                     console.log("Sending to DB")
-                    /* User.findOne({email: req.body.email}, (err, user) =>{
-                        console.log("BackSearch:",user);}); */
-                    //return res.status(200).send(user);
                 })
                 res.redirect("/login.html");
             })
