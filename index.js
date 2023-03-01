@@ -39,29 +39,34 @@ app.get("/logout", (req, res) => {
 });
 
 app.get("/", (req, res) => {
-  todos = []
-  Todo.find({}, (err, todos) => {
-    console.log("###################", todos)
-  })
+  Todo.find({}, '-_id -__v' , (err, allTodos) => {
+    let formatTodo = []
+    //console.log("###################", allTodos[2])
+    allTodos.forEach(i =>{
+      i.items.forEach(j => {
+        formatTodo.push(i.user+" : "+j)
+      
+      });
+    })
+    //console.log("This is a formated version: ",formatTodo)
+  
   //console.log("Todo query from db: ",todos)
-  console.log("homepage, token from localstorage: ",localStorage.getItem("auth_token"))
+  //console.log("homepage, token from localstorage: ",localStorage.getItem("auth_token"))
   if(localStorage.getItem('auth_token') === null){
-    res.render('home', {view: 'Public'})
+    res.render('home', {view: 'Public', allTodos: formatTodo})
   }else{
-/*     todos = [];
-    todos = Todo.find({}, 'user items')
-    console.log("Todo query from db: ",todos) */
     const dToken = jwtDecode(localStorage.getItem('auth_token'))
     User.findOne({email: dToken.email}, function (err, user) {
       if (err) throw err;
     Todo.findOne({user: user._id}, (err, todos) =>{
       let items;
       if (todos === null){items = []}else{items = todos.items}
-      console.log("homepage, todo items:",items)
+      //console.log("homepage, todo items:",items)
       if(err) return next(err);
     
-    res.render ('home', {view: 'Private', email: dToken.email, user: user._id ,items: items })})})
+    res.render ('home', {view: 'Private', email: dToken.email, allTodos: formatTodo })})})
   }
+  })
 });
 
 
@@ -72,7 +77,7 @@ app.get("/register.html", (req, res) => {
 
 app.post("/login",
 function (req, res, next) {
-  console.log("login, req.body",req.body);
+  //console.log("login, req.body",req.body);
     User.findOne({email: req.body.email}, function (err, user) {
     if (err) throw err;
     if (!user) {
@@ -83,7 +88,7 @@ function (req, res, next) {
       const secret ="WEB9"
       bcrypt.compare(req.body.password, user.password, function (err, isMatch) {
         if (err) throw err;
-        console.log("login: ",user._id.toString())
+        //console.log("login: ",user._id.toString())
         if (isMatch) {
           const jwtPayload = {
             email: user.email
@@ -94,7 +99,7 @@ function (req, res, next) {
             console.log("error: ",err);
             console.log("token:",token);
             localStorage.setItem("auth_token", token);
-            console.log("login, token from localstorage: ",localStorage.getItem("auth_token"))
+            //console.log("login, token from localstorage: ",localStorage.getItem("auth_token"))
             res.redirect('/')
           });
         }else res.status(403).json({
@@ -110,7 +115,7 @@ app.post('/register',
     body('email').isEmail(),
     body('password').isStrongPassword(),
     (req, res) => {
-    console.log("register, req.body:",req.body);
+    //console.log("register, req.body:",req.body);
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({message: "Password is not strong enough"})
@@ -120,15 +125,15 @@ app.post('/register',
         if(err) return next(err);
         if(!user){
             bcrypt.hash(req.body.password, saltRounds, function(err, hash) { //From bcrypt
-                console.log("Register, body.email, hash",req.body.email,hash)
+                //console.log("Register, body.email, hash",req.body.email,hash)
                 new User({
                     email: req.body.email,
                     password: hash,
                 }).save((err) => {
                     if(err) return next(err);
                     console.log("Sending to DB")
-                    User.findOne({email: req.body.email}, (err, user) =>{
-                        console.log("BackSearch:",user);});
+                    /* User.findOne({email: req.body.email}, (err, user) =>{
+                        console.log("BackSearch:",user);}); */
                     //return res.status(200).send(user);
                 })
                 res.redirect("/login.html");
@@ -147,14 +152,14 @@ app.post('/register',
 
 app.post('/add-item',validateToken,(req, res) => {
     const email = (req.user.email);
-    console.log("todo: ",email)
+    //console.log("todo: ",email)
     User.findOne({email: email}, (err, user) =>{
         if(err) return next(err);
-        console.log("User id: ",user)
+        //console.log("User id: ",user)
     
     Todo.findOne({user: user._id.toString()}, (err, todo) =>{
         if(err) return next(err);
-        console.log("Searching todo by username: ",todo)
+        //console.log("Searching todo by username: ",todo)
         if (todo === null){
             new Todo({
                 user: user._id.toString(),
