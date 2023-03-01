@@ -5,16 +5,17 @@ head
     block head
       title= 'Code snippets'
 body 
-block body
-    
+block body 
+    <html> <div role="main"></html>
     if view == 'Private'
         h1= view
         p Welcome #{email}
         form(action="/logout" method="GET")
             button(class="btn" type="submit" name="logout" id="logout") Logout
+        div
         form(action="/add-item" method="POST")
             label(for="items") Add-item 
-            input(type="text" name="items" id="add-item")
+            input(type="text" name="items" id="items")
             input(class="btn", value="Add-item", type="submit")
 
 
