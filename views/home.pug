@@ -1,0 +1,25 @@
+block content
+    
+    if view == 'Private'
+        h1= view
+        p Welcome #{email}
+        form(action="/logout" method="GET")
+            button(class="btn" type="submit" name="logout" id="logout") Logout
+        form(action="read()")
+            button(class="btn" type="submit" name="logout" id="logout") Storage
+        form(action="/add-item" method="POST")
+            label(for="items") Add-item 
+            input(type="text" name="items" id="add-item")
+            input(class="btn", value="Add-item", type="submit")
+        table
+            tr 
+                th User 
+                th Items
+            tr 
+                td= user
+                td= items
+
+    else 
+        h1= view
+        a(class='button' href='/login.html') Login 
+        a(class='button', href='/register.html') Register

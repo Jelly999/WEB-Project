@@ -1,0 +1,8 @@
+block content
+  h1 Register
+  form(action="/register" method="POST")
+    label(for="email") Email 
+    input(type="email" name="email" id="email" required)
+    label(for="password") Password 
+    input(type="password" name="password" id="password" required)
+    input(class="btn", value="Register", type="submit")
