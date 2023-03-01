@@ -1,4 +1,13 @@
+doctype html
+html(lang='en')
+page.title
+head
+    block head
+      title= 'Code snippets'
+body 
 block content
+  a(class='button' href='/') Homepage 
+  div 
   h1 Login
   form(action="/login" method="POST")
     label(for="email") Email 
@@ -6,3 +15,6 @@ block content
     label(for="password") Password 
     input(type="password" name="password" id="password" required)
     input(class="btn", value="Login", type="submit")
+
+    
+    
