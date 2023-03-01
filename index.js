@@ -39,10 +39,18 @@ app.get("/logout", (req, res) => {
 });
 
 app.get("/", (req, res) => {
+  todos = []
+  Todo.find({}, (err, todos) => {
+    console.log("###################", todos)
+  })
+  //console.log("Todo query from db: ",todos)
   console.log("homepage, token from localstorage: ",localStorage.getItem("auth_token"))
   if(localStorage.getItem('auth_token') === null){
     res.render('home', {view: 'Public'})
   }else{
+/*     todos = [];
+    todos = Todo.find({}, 'user items')
+    console.log("Todo query from db: ",todos) */
     const dToken = jwtDecode(localStorage.getItem('auth_token'))
     User.findOne({email: dToken.email}, function (err, user) {
       if (err) throw err;
