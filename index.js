@@ -6,7 +6,7 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const mongoose = require('mongoose');
 const User = require("./Users");
-const Todo = require("./Todo");
+const Snippet = require("./Snippet");
 const jwt = require("jsonwebtoken");
 const validateToken = require("./validateToken")
 require('dotenv').config();
@@ -39,22 +39,22 @@ app.get("/logout", (req, res) => {
 });
 
 app.get("/", (req, res) => {
-  Todo.find({}, '-_id -__v' , (err, allTodos) => {
-    let formatTodo = []
+  Snippet.find({}, '-_id -__v' , (err, allSnippets) => {
+    let formatSnippet = []
     // LOOP INFO
-    allTodos.forEach(i =>{
+    allSnippets.forEach(i =>{
       i.items.forEach(j => {
-        formatTodo.push(i.user+" : "+j)
+        formatSnippet.push(i.user+" : "+j)
       });
     })
     
     //console.log("homepage, token from localstorage: ",localStorage.getItem("auth_token"))
     // VIEW INFO
     if(localStorage.getItem('auth_token') === null){
-      res.render('home', {view: 'Public', allTodos: formatTodo})
+      res.render('home', {view: 'Public', allSnippets: formatSnippet})
     }else{
       const dToken = jwtDecode(localStorage.getItem('auth_token'))
-      res.render ('home', {view: 'Private', email: dToken.email, allTodos: formatTodo })
+      res.render ('home', {view: 'Private', email: dToken.email, allSnippets: formatSnippet })
     }
   })
 });
@@ -144,12 +144,12 @@ app.post('/add-item',validateToken,(req, res) => {
         if(err) return next(err);
         //console.log("User id: ",user)
     
-    Todo.findOne({user: user._id.toString()}, (err, todo) =>{
+    Snippet.findOne({user: user.email}, (err, todo) =>{
         if(err) return next(err);
         //console.log("Searching todo by username: ",todo)
         if (todo === null){
-            new Todo({
-                user: user._id.toString(),
+            new Snippet({
+                user: user.email,
                 items:[req.body.items],
             }).save((err) => {
                 if(err) return next(err);
@@ -160,10 +160,6 @@ app.post('/add-item',validateToken,(req, res) => {
     }else{todo.items.push(req.body.items);todo.save();res.redirect("/");}
     
 })});});
-
-let read =() => {
-  return localStorage.getItem("auth_token")
-}
 
 app.listen(port, () => {
     console.log("Server is up'n'running at http://localhost:" + port);
