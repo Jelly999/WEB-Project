@@ -8,7 +8,7 @@ Installation guide:
 Technology choices:
     I was most familiar with express and Pug so I decided to use those. Express was used in previus week task and this project could use some of those components with adjustments. 
 
-    Wave: ...
+    Wave Evaluation tool: Is a Google Chrome extention that can be found in Chrome web store. Using an extention allowed me to test in local environment. 
 
 Implemented features
 Mandatory:
@@ -23,6 +23,7 @@ Additional points:
     Accessibility +3p
         I used Wave tool to fix any accessibility errors. With it I fixed labels, html lang attribute, page title and Aria landmarks to indicate where is the main content. Webpage is screenreadable and navigatable using keyboard.
     Cypress 10 tests +5p
+        Run tests with server online and accessible, database is also required. Test creates users automatically, do not create any impending users that migth cause test to fail. 
         1. User can register
         2. Password must be strong
         3. Username must be email address
@@ -33,6 +34,7 @@ Additional points:
         8. Username is shown in homepage when logged in
         9. Log out button changes text to public
         10. User cannot register with email that is in use
+        
 
 Total points 25+8 = 33 points
 
